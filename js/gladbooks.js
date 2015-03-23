@@ -59,6 +59,7 @@ g_menus = [
     ['salesorders.process', showForm, 'salesorder', 'process', 'Manual Billing Run'],
     ['salespayment.create', showForm, 'salespayment', 'create', 'Enter Sales Payment'],
     ['salespayments', showQuery, 'salespayments', 'Sales Payments', true],
+    ['business.update', showForm, 'business', 'update', 'Business Settings', g_business],
     ['business.create', getForm, 'business', 'create', 'Add New Business'],
     ['businessview', showQuery, 'businesses', 'Businesses', true],
     ['chartadd', showForm, 'account', 'create', 'Add New Account'],
@@ -141,6 +142,7 @@ var g_frmLedger;
 var g_xml_accounttype = '';
 var g_xml_business = ''
 var g_xml_relationships = '';
+var g_warnlogout = true;
 
 /* bank reconcilition types */
 var rectype = {
@@ -1598,6 +1600,13 @@ function finishJournalForm(tab) {
     /* set up input validation events */
     /* TODO */
 
+}
+
+function objectCollectionCustom(object) {
+    if (object === 'business') {
+        return 'businesses';
+    }
+    return object + 's';
 }
 
 /* Populate Accounts Drop-Downs with XML Data */
