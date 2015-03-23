@@ -2082,6 +2082,9 @@ div.panel.right {
   font-size: 80%;
   font-family: monospace; }
 
+div.reportopener {
+  background-color: #6e89a5; }
+
 @media all and (max-width: 1024px) {
   div.report {
     height: 100%; } }

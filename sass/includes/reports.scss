@@ -21,6 +21,9 @@ div.panel.right {
         font-size: 80%;
         font-family: monospace;
 }
+div.reportopener {
+        background-color: $color-dark;
+}
 
 @media all and (max-width: $small-screen-width) {
         div.report {
