@@ -45,6 +45,8 @@ g_menus = [
     ['purchaseinvoice.create', showForm, 'purchaseinvoice', 'create', 'New Purchase Invoice'],
     ['purchaseorder.list', showQuery, 'purchaseorders', 'Purchase Orders', true],
     ['purchaseorder.create', showForm, 'purchaseorder', 'create', 'New Purchase Order'],
+    ['purchasepayment.create', showForm, 'purchasepayment', 'create', 'Enter Purchase Payment'],
+    ['purchasepayments', showQuery, 'purchasepayments', 'Purchase Payments', true],
     ['product.create', showForm, 'product', 'create', 'Add New Product'],
     ['products', showQuery, 'products', 'Products', true],
     ['rpt_accountsreceivable', showQuery, 'reports/accountsreceivable', 'Accounts Receivable', true],
@@ -117,6 +119,10 @@ FORMDATA = {
     'purchaseorder': {
         'create': ['cycles', 'organisations', 'productcombo_purchase'],
         'update': ['cycles', 'productcombo_purchase', 'purchaseorderitems/{id}/'],
+    },
+    'purchasepayment': {
+        'create': ['paymenttype', 'organisations', 'accounts.asset'],
+        'update': ['paymenttype', 'organisations', 'accounts.asset'],
     },
     'salesorder': {
         'create': ['cycles', 'organisations', 'productcombo'],
@@ -2456,7 +2462,7 @@ customClickElement = function(row) {
     var action = 'update';
 
     /* Some collections should never do anything when clicked */
-    var inert = ['salespayments'];
+    var inert = ['purchasepayments', 'salespayments'];
     if (inert.indexOf(tab.collection) != -1) {
         return true;
     }

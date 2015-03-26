@@ -556,6 +556,20 @@ WHERE id IN (
 	GROUP BY purchasepayment
 );
 
+CREATE OR REPLACE VIEW purchasepaymentlist AS
+SELECT
+	pp.purchasepayment AS id,
+	pp.transactdate AS date,
+	o.orgcode,
+	pp.bankaccount as account,
+	pp.amount,
+	pp.updated
+
+FROM purchasepayment_current pp
+INNER JOIN organisation_current o ON o.id = pp.organisation
+ORDER BY pp.id ASC;
+
+
 CREATE TABLE purchasepaymentallocation (
 	id		SERIAL PRIMARY KEY,
 	updated		timestamp with time zone default now(),
