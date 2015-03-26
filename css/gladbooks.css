@@ -2085,6 +2085,9 @@ div.panel.right {
 div.reportopener {
   background-color: #6e89a5; }
 
+div.tablet.rpt_vat div.report.update {
+  margin: 0; }
+
 @media all and (max-width: 1024px) {
   div.report {
     height: 100%; } }

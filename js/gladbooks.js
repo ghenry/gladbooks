@@ -50,9 +50,9 @@ g_menus = [
     ['rpt_accountsreceivable', showQuery, 'reports/accountsreceivable', 'Accounts Receivable', true],
     ['rpt_ageddebtors', showQuery, 'reports/ageddebtors', 'Aged Debtors', false, false],
     ['rpt_balancesheet', showHTML, 'reports/balancesheet', 'Balance Sheet', false, true],
-    ['rpt_profitandloss', showHTML, 'reports/profitandloss', 'Profit & Loss', false, true],
+    ['rpt_profitandloss', showReport, 'rpt_profitandloss'],
     ['rpt_trialbalance', showQuery, 'reports/trialbalance', 'Trial Balance', false],
-    ['rpt_vat', showForm, 'report', 'update', 'VAT Report', false],
+    ['rpt_vat', showReport, 'rpt_vat'],
     ['salesinvoices', showQuery, 'salesinvoices', 'Sales Invoices', true],
     ['salesorder.create', showForm, 'salesorder', 'create', 'New Sales Order'],
     ['salesorders', showQuery, 'salesorders', 'Sales Orders', true],
@@ -2043,6 +2043,17 @@ function setupJournalForm(tab) {
     populateDebitCreditDDowns();
 }
 
+function showReport(report) {
+    if (report === 'rpt_profitandloss') {
+        var title = 'Profit & Loss'; /* TODO: i18n */
+    }
+    else if (report === 'rpt_vat') {
+        var title = 'VAT Report';   /* TODO: i18n */
+    }
+    var form = showForm('report', 'update', title, false);
+    form.classes.push(report);
+}
+
 function submitJournalEntry(event, form, bankid) {
     event.preventDefault();
     xml = validateJournalEntry(form, bankid);
@@ -2799,17 +2810,28 @@ Form.prototype.eventsCustomOrganisationSalesPaymentAllocate = function(sp) {
 
 Form.prototype.eventsCustomReport = function(form, t) {
     t.find('input.datefield').change(function() {
+        var target = t.find('div.report.update');
         var start_date = t.find('input[name="start_date"]').val();
         var end_date = t.find('input[name="end_date"]').val();
+        if (t.hasClass('rpt_profitandloss')) {
+            var report = 'reports/profitandloss';
+        }
+        else if (t.hasClass('rpt_vat')) {
+            var report = 'vatreport';
+        }
         if (isDate(start_date) && isDate(end_date)) {
             console.log('got both dates');
             if (start_date > end_date) {
                 statusMessage('From must be before To', STATUS_WARN);
                 return false;
             }
-            console.log('displaying VAT report');
-            var collection = 'vatreport/' + start_date + '/' + end_date;
-            showQuery(collection, form.tab.title, form.tab.sort, t);
+            var collection = report + '/' + start_date + '/' + end_date;
+            if (t.hasClass('rpt_profitandloss')) {
+                showHTML(collection, form.tab.title, target, collection);
+            }
+            else {
+                showQuery(collection, form.tab.title, form.tab.sort, target);
+            }
         }
     });
 }

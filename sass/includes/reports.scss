@@ -25,6 +25,10 @@ div.reportopener {
         background-color: $color-dark;
 }
 
+div.tablet.rpt_vat div.report.update {
+        margin: 0;
+}
+
 @media all and (max-width: $small-screen-width) {
         div.report {
                 height: 100%;
