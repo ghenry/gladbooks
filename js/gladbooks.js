@@ -49,7 +49,7 @@ g_menus = [
     ['products', showQuery, 'products', 'Products', true],
     ['rpt_accountsreceivable', showQuery, 'reports/accountsreceivable', 'Accounts Receivable', true],
     ['rpt_ageddebtors', showQuery, 'reports/ageddebtors', 'Aged Debtors', false, false],
-    ['rpt_balancesheet', showHTML, 'reports/balancesheet', 'Balance Sheet', false, true],
+    ['rpt_balancesheet', showReport, 'rpt_balancesheet'],
     ['rpt_profitandloss', showReport, 'rpt_profitandloss'],
     ['rpt_trialbalance', showQuery, 'reports/trialbalance', 'Trial Balance', false],
     ['rpt_vat', showReport, 'rpt_vat'],
@@ -2044,7 +2044,10 @@ function setupJournalForm(tab) {
 }
 
 function showReport(report) {
-    if (report === 'rpt_profitandloss') {
+    if (report === 'rpt_balancesheet') {
+        var title = 'Balance Sheet'; /* TODO: i18n */
+    }
+    else if (report === 'rpt_profitandloss') {
         var title = 'Profit & Loss'; /* TODO: i18n */
     }
     else if (report === 'rpt_vat') {
@@ -2813,14 +2816,16 @@ Form.prototype.eventsCustomReport = function(form, t) {
         var target = t.find('div.report.update');
         var start_date = t.find('input[name="start_date"]').val();
         var end_date = t.find('input[name="end_date"]').val();
-        if (t.hasClass('rpt_profitandloss')) {
+        if (t.hasClass('rpt_balancesheet')) {
+            var report = 'reports/balancesheet';
+        }
+        else if (t.hasClass('rpt_profitandloss')) {
             var report = 'reports/profitandloss';
         }
         else if (t.hasClass('rpt_vat')) {
             var report = 'vatreport';
         }
         if (isDate(start_date) && isDate(end_date)) {
-            console.log('got both dates');
             if (start_date > end_date) {
                 statusMessage('From must be before To', STATUS_WARN);
                 return false;
@@ -2832,6 +2837,10 @@ Form.prototype.eventsCustomReport = function(form, t) {
             else {
                 showQuery(collection, form.tab.title, form.tab.sort, target);
             }
+        }
+        else if (isDate(start_date) && t.hasClass('rpt_balancesheet')) {
+            var collection = report + '/' + start_date;
+            showHTML(collection, form.tab.title, target, collection);
         }
     });
 }

@@ -25,6 +25,23 @@ div.reportopener {
         background-color: $color-dark;
 }
 
+div.tablet div.lbl_at {
+        display: none;
+}
+
+div.tablet.rpt_balancesheet div.lbl_at {
+        display: block;
+}
+
+div.tablet.rpt_balancesheet div.lbl_from,
+div.tablet.rpt_balancesheet div.lbl_to {
+        display: none;
+}
+
+div.tablet.rpt_balancesheet input[name="end_date"] {
+        display: none;
+}
+
 div.tablet.rpt_vat div.report.update {
         margin: 0;
 }
