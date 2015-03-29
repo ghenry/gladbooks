@@ -2029,7 +2029,7 @@ BEGIN
 		t.account as account,
 		t.name as taxname,
 		tr.rate,
-		sii.price * sii.qty AS nett,
+		SUM(sii.price * sii.qty) AS nett,
 		roundhalfeven(SUM(sii.price * sii.qty) * tr.rate/100, 2) AS total
 	FROM salesinvoice_current si 
 	LEFT JOIN salesinvoiceitem_current sii ON si.salesinvoice = sii.salesinvoice
