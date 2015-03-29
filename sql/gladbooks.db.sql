@@ -2043,7 +2043,7 @@ BEGIN
 	(tr.valid_from <= si.taxpoint OR tr.valid_from IS NULL)
 	AND (tr.valid_to >= si.taxpoint OR  tr.valid_to IS NULL)
 	AND si.salesinvoice = NEW.salesinvoice
-	GROUP BY si.salesinvoice,t.account,t.name,sii.price, sii.qty,tr.rate
+	GROUP BY si.salesinvoice,t.account,t.name,tr.rate
 	ORDER BY tr.rate DESC
 	;
 
