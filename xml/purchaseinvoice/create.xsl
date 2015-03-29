@@ -16,7 +16,10 @@
 		<xsl:text>BEGIN;</xsl:text>
                 <xsl:apply-templates select="data/purchaseinvoice"/>
 		<xsl:text>COMMIT;</xsl:text>
-		<xsl:text>SELECT * FROM purchaseinvoice_current WHERE id=</xsl:text>
+		<xsl:text>SELECT pi.id, o.name AS organisation, ref, ponumber, description, taxpoint, due, subtotal, tax, total, pi.updated, pi.authuser, pi.clientip </xsl:text>
+                <xsl:text>FROM purchaseinvoice_current pi </xsl:text>
+                <xsl:text>INNER JOIN organisation_current o ON o.id = pi.organisation </xsl:text>
+		<xsl:text>WHERE pi.id=</xsl:text>
                 <xsl:choose>
                         <xsl:when test="$id">
                                 <xsl:text>'</xsl:text>
