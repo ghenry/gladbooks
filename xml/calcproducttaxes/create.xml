@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request>
+  <instance>bacs</instance>
+  <business>1</business>
+  <data>
+    <line product="1" total="4.50"/>
+  </data>
+</request>

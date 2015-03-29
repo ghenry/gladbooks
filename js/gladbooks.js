@@ -113,8 +113,8 @@ FORMDATA = {
         'update': ['accounts.revenue', 'taxes'],
     },
     'purchaseinvoice': {
-        'create': ['organisations', 'taxrate'],
-        'update': ['organisations', 'taxrate'],
+        'create': ['cycles', 'organisations', 'productcombo_purchase'],
+        'update': ['cycles', 'productcombo_purchase', 'purchaseinvoiceitems/{id}/'],
     },
     'purchaseorder': {
         'create': ['cycles', 'organisations', 'productcombo_purchase'],
@@ -2858,44 +2858,58 @@ Form.prototype.onChangeCustom = function(ctl) {
 }
 
 Form.prototype.onChangeCustomPurchaseInvoice = function(ctl) {
+    console.log('Form.onChangeCustomPurchaseInvoice()');
     var t = this.tab.tablet;
-    var exvat = Big(0);
-    var incvat = Big(0);
-    var subtotal = t.find('[name="subtotal"]');
-    var tax = t.find('[name="tax"]');
-    var total = t.find('[name="total"]');
-    var vat = Big(0);
-    var taxrates = $(this.data['taxrate']);
-    var std = taxrates.find('resources row').filter(function() {
-        return $(this).find('id').text() === '1';
+    var xml = createRequestXml();
+    var products = t.find('select.product');
+    products.each(function() {
+        var p = $(this).val();
+        var t = $(this).closest('div.tr').find('input.total').val();
+        if (p > 0) {
+            xml += '<line product="' + p + '" total="' + t + '"/>';
+        }
     });
-    var vatrate = std.find('rate').text();
-    if ($.isNumeric(vatrate)) {
-        vatrate = Big(vatrate).div('100');
-    }
-    else {
-        console.log('vat rate not found');
-        return false;
-    }
+    xml += '</data></request>';
+    
+    var url = collection_url('calcproducttaxes');
 
-    if (ctl.hasClass('subtotal')) {
-        exvat = Big(subtotal.val());
-        if (!tax.hasClass('userdefined')) {
-            vat = exvat.times(vatrate);
-            vat = decimalPad(roundHalfEven(vat, 2), 2);
-            tax.val(vat);
-            tax.addClass('dirty');
-            tax.data('prev', tax.val());
-            tax.trigger('blur');
+    $.ajax({
+        url: url,
+        data: xml,
+        contentType: 'text/xml',
+        type: 'POST',
+        beforeSend: function(xhr) {
+            setAuthHeader(xhr);
+        },
+        success: function(data) {
+            console.log('calc complete');
+            var tax = new Big('0.00');
+            tax.DP = 2;
+            tax.RM = 2; // ROUND_HALF_EVEN
+            $(data).find('row').each(function() {
+                var rate = $(this).find('rate').text();
+                var amount = $(this).find('amount').text();
+                if (rate !== undefined && amount !== undefined) {
+                    rate = new Big(rate).div(100);
+                    amount = new Big(amount);
+                    tax = tax.plus(rate.times(amount));
+                }
+            });
+            var taxbox = t.find('input.tax');
+            /* update tax, unless user has overridden it */
+            if (!taxbox.hasClass('userdefined')) {
+                t.find('input.tax').val(tax.toFixed(2)).addClass('dirty');
+            }
+            var subtotal = t.find('div.tr.totals input.subtotal[type="hidden"]').val();
+            subtotal = new Big(subtotal);
+            var total = subtotal.plus(tax);
+            total.DP = 2;
+            total.RM = 2; // ROUND_HALF_EVEN
+            t.find('div.tr.totals input.total[type="hidden"]').val(total.toFixed(2)).addClass('dirty');
+            t.find('div.tr.totals input.total.nosubmit').val(total.toFixed(2).formatCurrency());
+            t.find('div.tr.totals input.subtotal[type="hidden"]').addClass('dirty');
         }
-        if (!total.hasClass('userdefined')) {
-            incvat = decimalPad(roundHalfEven(decimalAdd(exvat, vat), 2), 2);
-            total.val(incvat);
-            total.addClass('dirty');
-            total.data('prev', total.val());
-            total.trigger('blur');
-        }
-    }
+    });
 }
 
 Form.prototype.onKeyPressCustom = function(e, ctl) {
@@ -2960,7 +2974,8 @@ Form.prototype.overrides = function() {
             var journal = this.data["FORMDATA"].find('journal').text();
             if ($.isNumeric(journal)) {
                 /* PI has been posted to journal - make readonly */
-                t.find('input,select').prop('readonly', true);
+                t.find('input').prop('readonly', true);
+                t.find('select').prop('disabled', true);
                 t.find('button').hide();
             }
         }

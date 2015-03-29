@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="request">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="instance" type="xs:string"/>
+      <xs:element name="business" type="xs:positiveInteger"/>
+      <xs:element name="data">
+        <xs:complexType>
+          <xs:sequence>
+						<xs:element name="line" minOccurs="1" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="product" type="xs:positiveInteger" use="required"/>
+								<xs:attribute name="total" type="xs:decimal" use="required"/>
+							</xs:complexType>
+						</xs:element><!--product_tax-->
+
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element><!--data-->
+
+    </xs:sequence>
+  </xs:complexType>
+</xs:element><!--request-->
+
+</xs:schema>

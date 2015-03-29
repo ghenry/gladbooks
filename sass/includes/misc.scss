@@ -1100,10 +1100,12 @@ div.salesorder div.datatable div.end_date {
 }
 /* {purchase,sales}order -> products subform */
 div.purchaseorder div.datatable div.product,
+div.purchaseinvoice div.datatable div.product,
 div.salesorder div.datatable div.product {
 	width: 25%;
 }
 div.purchaseorder div.datatable div.linetext,
+div.purchaseinvoice div.datatable div.linetext,
 div.salesorder div.datatable div.linetext {
 	width: 35%;
 }
@@ -1117,14 +1119,17 @@ div.salesorder div.datatable div.price {
 	width: 15%;
 }
 div.purchaseorder div.datatable div.qty,
+div.purchaseinvoice div.datatable div.qty,
 div.salesorder div.datatable div.qty {
 	width: 5%;
 }
 div.purchaseorder div.datatable div.total,
+div.purchaseinvoice div.datatable div.total,
 div.salesorder div.datatable div.total {
 	width: 15%;
 }
 div.purchaseorder div.datatable div.total.td input,
+div.purchaseinvoice div.datatable div.total.td input,
 div.salesorder div.datatable div.total.td input {
 	color: black;
 	font-size: 100%;
@@ -1134,29 +1139,35 @@ div.salesorder div.datatable div.total.td input {
 	margin-top: 2px;
 }
 div.purchaseorder div.datatable div.btn,
+div.purchaseinvoice div.datatable div.btn,
 div.salesorder div.datatable div.btn {
 	text-align: center;
 	width: 5%;
 }
 div.purchaseorder div.datatable div.btn button.add,
+div.purchaseinvoice div.datatable div.btn button.add,
 div.salesorder div.datatable div.btn button.add {
 	display: none;
 	margin-left: auto;
 	margin-right: auto;
 }
 div.purchaseorder div.datatable div.btn button.add::before,
+div.purchaseinvoice div.datatable div.btn button.add::before,
 div.salesorder div.datatable div.btn button.add::before {
 	content: "\271A";
 }
 div.purchaseorder div.subformwrapper div.tr:first-child div.btn button.add,
+div.purchaseinvoice div.subformwrapper div.tr:first-child div.btn button.add,
 div.salesorder div.subformwrapper div.tr:first-child div.btn button.add {
 	display: block;
 }
 div.purchaseorder div.subformwrapper div.tr:first-child div.btn button.del,
+div.purchaseinvoice div.subformwrapper div.tr:first-child div.btn button.del,
 div.salesorder div.subformwrapper div.tr:first-child div.btn button.del {
 	display: none;
 }
 div.purchaseorder div.datatable div.tr.totals,
+div.purchaseinvoice div.datatable div.tr.totals,
 div.salesorder div.datatable div.tr.totals {
 	background-color: $color-dark;
 	border: 1px solid white;
@@ -1173,6 +1184,10 @@ div.salesorder div.datatable div.tr.totals input {
 	background-color:transparent;
 	border: none;
 	outline: none;
+}
+
+div.purchaseinvoice div.datatable div.tr.totals input {
+        width: 50%;
 }
 
 select[readonly] {

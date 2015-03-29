@@ -17,18 +17,66 @@
 				<div class="tr">
 					<div class="th taxpoint">Tax Point</div>
 					<div class="th due">Due Date</div>
-					<div class="th subtotal">Ex VAT</div>
+					<!--div class="th subtotal">Ex VAT</div>
 					<div class="th tax">VAT</div>
-					<div class="th total">Total</div>
+					<div class="th total">Total</div-->
 				</div>
+        
 				<div class="tr">
 					<div class="td taxpoint"><input name="taxpoint" class="datefield" autocomplete="off" required="required" data-required-message="Enter Tax Point"/></div>
 					<div class="td due"><input name="due" class="datefield" autocomplete="off"/></div>
-          <div class="td subtotal"><input class="subtotal currency onchange" type="text" name="subtotal" placeholder="0.00" required="required" data-required-message="Enter Ex VAT amount" /></div>
-          <div class="td tax"><input class="tax currency onchange" type="text" name="tax" placeholder="0.00" required="required" data-required-message="Enter VAT"/></div>
-          <div class="td total"><input class="total currency onchange" type="text" name="total" placeholder="0.00" required="required" data-required-message="Enter Total (Inc. VAT)"/></div>
            
 				</div>
+        
+        <div class="form" data-object="product" data-tag="salesitem">
+          <div class="tr">
+            <div class="th product">Product</div>
+            <div class="th linetext">Line Text</div>
+            <div class="th price">Price</div>
+            <div class="th qty">Qty</div>
+            <div class="th total">Total</div>
+            <div class="th btn">&nbsp;</div>
+          </div>
+          <div class="subformwrapper">
+            <div class="tr sub" data-minOccurs="1">
+              <div class="td product"><select name="product" class="product populate onchange formfill" data-source="productcombo_purchase" required="required" data-required-message="Please select Product" data-placeholder=" - Select product - "></select></div>
+              <div class="td linetext"><input class="linetext" name="linetext" type="text" placeholder="Line Text"/></div>
+              <div class="td price"><input class="price onchange multiplicand currency" name="price" type="text" placeholder="0.00"/></div>
+              <div class="td qty"><input class="qty onchange multiplicand" name="qty" type="text" data-default="1" placeholder="1" value="1"/></div>
+              <div class="td total"><input class="total sum currency nosubmit onchange" name="total" type="text" placeholder="0.00" readonly="true" tabindex="-1" value="0.00" data-default="0.00"/></div>
+              <div class="td btn"><button class="add"></button><button class="del">X</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="tr totals">
+          <div class="tr">
+            <div class="td subtotal">
+              <input class="subtotal onchange" type="hidden" name="subtotal" />
+              <label>
+                <input class="subtotal currency onchange nosubmit" type="text" name="subtotal" placeholder="0.00" required="required" data-required-message="Enter Ex VAT amount" readonly="true" tabindex="-1" />
+                Subtotal
+              </label>
+            </div>
+          </div>
+          <div class="tr">
+            <div class="td tax">
+              <label>
+                <input class="tax currency onchange" type="text" name="tax" placeholder="0.00" required="required" data-required-message="Enter VAT"/>
+                VAT
+              </label>
+            </div>
+          </div>
+          <div class="tr">
+            <div class="td total">
+              <input class="total onchange" type="hidden" name="total" />
+              <label>
+                <input class="total currency onchange nosubmit" type="text" name="total" placeholder="0.00" required="required" data-required-message="Enter Total (Inc. VAT)" readonly="true" tabindex="-1"/>
+                Total
+              </label>
+          </div>
+
+          </div>
+        </div>
 			</div>
 		</form>
 	</div>

@@ -496,6 +496,57 @@ CREATE TRIGGER purchaseinvoicedetailupdate BEFORE INSERT
 ON purchaseinvoicedetail
 FOR EACH ROW EXECUTE PROCEDURE purchaseinvoicedetailupdate();
 
+CREATE TABLE purchaseinvoiceitem (
+        id              SERIAL PRIMARY KEY,
+        uuid            uuid,
+        updated         timestamp with time zone default now(),
+        authuser        TEXT,
+        clientip        TEXT
+);
+
+CREATE TABLE purchaseinvoiceitemdetail (
+        id              SERIAL PRIMARY KEY,
+        purchaseinvoiceitem        INT4 references purchaseinvoiceitem(id) NOT NULL
+            DEFAULT currval(pg_get_serial_sequence('purchaseinvoiceitem','id')),
+        purchaseinvoice    INT4 references purchaseinvoice(id) NOT NULL
+            DEFAULT currval(pg_get_serial_sequence('purchaseinvoice','id')),
+        product         INT4 references product(id) NOT NULL,
+        linetext        TEXT,
+        discount        NUMERIC,
+        price           NUMERIC,
+        qty             NUMERIC DEFAULT '1',
+        is_deleted      boolean DEFAULT false,
+        updated         timestamp with time zone default now(),
+        authuser        TEXT,
+        clientip        TEXT
+);
+
+CREATE OR REPLACE VIEW purchaseinvoiceitem_current AS
+SELECT 
+        pii.id,
+        pii.uuid,
+        piid.id AS detailid,
+        piid.purchaseinvoiceitem,
+        piid.purchaseinvoice,
+        piid.product,
+        piid.linetext,
+        piid.discount,
+        piid.price,
+        piid.qty,
+        pii.updated AS created,
+        piid.updated,
+        piid.authuser,
+        piid.clientip
+FROM purchaseinvoiceitem pii 
+INNER JOIN purchaseinvoiceitemdetail piid
+ON pii.id = piid.purchaseinvoiceitem
+WHERE piid.id IN (
+        SELECT MAX(id)
+        FROM purchaseinvoiceitemdetail
+        GROUP BY purchaseinvoiceitem
+)
+AND is_deleted = false;
+
 CREATE OR REPLACE VIEW purchaseinvoice_current AS
 SELECT
         pi.id,
