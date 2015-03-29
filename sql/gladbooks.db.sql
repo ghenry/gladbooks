@@ -1809,7 +1809,7 @@ BEGIN
                 c = NULL;
         ELSE
                 d = NULL;
-                c = r_si.total;
+                c = ABS(r_si.total);
         END IF;
 
         -- TODO: divisions and departments
@@ -1824,7 +1824,7 @@ BEGIN
         FROM salesinvoice_tax sit WHERE sit.salesinvoice=si_id
         LOOP
                 IF (r_tax.total < 0) THEN
-                        d = r_tax.total;
+                        d = ABS(r_tax.total);
                         c = NULL;
                 ELSE
                         d = NULL;
@@ -1845,7 +1845,6 @@ BEGIN
                 VALUES (code, d, c);
         END LOOP;
 
-
         -- post product details to ledger
         FOR r_item IN
         SELECT sii.salesinvoice, p.account, sii.linetotal
@@ -1854,7 +1853,7 @@ BEGIN
         WHERE sii.salesinvoice=si_id
         LOOP
                 IF (r_item.linetotal < 0) THEN
-                        d = r_item.linetotal;
+                        d = ABS(r_item.linetotal);
                         c = NULL;
                 ELSE
                         d = NULL;
