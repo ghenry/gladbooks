@@ -23,7 +23,11 @@
 /* global variables **********************************************************/
 
 g_gladbooks_version = '0.2.1a';
+g_gladd_version_req = '1.0.6';
 console.log('Loaded gladbooks.js version ' + g_gladbooks_version);
+if (!requireGladdJs(g_gladd_version_req)) {
+    throw "gladd.js version " + g_gladd_version_req + " or greater required."
+}
 
 g_menus = [
     ['bank.reconcile', getForm, 'bank', 'reconcile', 'Bank Reconciliation'],
