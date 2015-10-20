@@ -2061,6 +2061,15 @@ function showReport(report) {
     }
     var form = showForm('report', 'update', title, false);
     form.classes.push(report);
+    form.d.done(function() {
+        if (report === 'rpt_balancesheet') {
+            start_date = form.tab.find('input[name="start_date"]');
+            if (!isDate(start_date)) {
+                start_date.datepicker('setDate', new Date());
+                start_date.trigger('change');
+            }
+        }
+    });
 }
 
 function submitJournalEntry(event, form, bankid) {
