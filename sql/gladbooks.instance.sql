@@ -251,8 +251,10 @@ CREATE TRIGGER trig_business_year BEFORE INSERT ON business_year
 FOR EACH ROW EXECUTE PROCEDURE business_year_end();
 
 CREATE OR REPLACE VIEW businessview AS
-SELECT b.*, o.orgcode FROM business b
+SELECT b.*, o.orgcode, byear.period_start, byear.period_end
+FROM business b
 INNER JOIN organisation o ON o.id = b.organisation
+INNER JOIN (select * from business_year WHERE business='1' AND id IN (SELECT MAX(id) FROM business_year GROUP BY business)) byear ON b.id = byear.business
 ;
 
 CREATE TABLE tag (

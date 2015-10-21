@@ -711,6 +711,14 @@ function bankReconcileSuggest() {
 
 }
 
+function businessPeriodStart() {
+    var business = $(g_xml_business).find('id').filter(function() {
+        return $(this).text() === g_business;
+    }).parent();
+    var period_start = business.find('period_start').text();
+    return period_start;
+}
+
 function createJournalEntry(t) {
     console.log('createJournalEntry()');
     var xml = createRequestXml();
@@ -2066,11 +2074,23 @@ function showReport(report) {
     var form = showForm('report', 'update', title, false);
     form.classes.push(report);
     form.d.done(function() {
+        start_date = form.tab.find('input[name="start_date"]');
+        end_date = form.tab.find('input[name="end_date"]');
         if (report === 'rpt_balancesheet') {
-            start_date = form.tab.find('input[name="start_date"]');
             if (!isDate(start_date)) {
                 start_date.datepicker('setDate', new Date());
                 start_date.trigger('change');
+            }
+        }
+        else if (report === 'rpt_profitandloss') {
+            var period_start = businessPeriodStart();
+            if (!isDate(start_date) && isDate(period_start)) {
+                start_date.datepicker('setDate', new Date(period_start));
+                start_date.trigger('change');
+            }
+            if (!isDate(end_date)) {
+                end_date.datepicker('setDate', new Date());
+                end_date.trigger('change');
             }
         }
     });
