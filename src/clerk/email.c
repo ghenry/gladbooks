@@ -55,7 +55,7 @@ int write_socket(int sockfd, char *expect, char *msg, ...) {
         va_start(args, msg);
         vsnprintf(fmsg, SMTP_LINE_MAX, msg, args);
         va_end(args);
-        fprintf(stderr, "%s", fmsg);
+        syslog(LOG_DEBUG, "%s", fmsg);
         write(sockfd, fmsg, strlen(fmsg));
 
         if (!expect) return 0;
@@ -66,7 +66,7 @@ int write_socket(int sockfd, char *expect, char *msg, ...) {
                 perror("read");
                 return -1;
         }
-        fprintf(stderr, "%s", buf);
+        syslog(LOG_DEBUG, "%s", buf);
         if (strncmp(buf, expect, strlen(expect)) != 0) {
                 printf("Expected %s, giving up\n", expect);
                 return -1;
@@ -141,9 +141,7 @@ int send_email(char *sendername, char *sendermail, char *msg,
                 syslog(LOG_DEBUG, "ERROR: 250 expected for HELO");
                 goto close_socket;
         }
-        if (write_socket(sockfd,
-                "250", "MAIL FROM: %s <%s>\r\n", sendername, sendermail) != 0) 
-        {
+        if (write_socket(sockfd, "250", "MAIL FROM: <%s>\r\n", sendermail) != 0) {
                 syslog(LOG_DEBUG, "ERROR: 250 expected for MAIL");
                 goto close_socket;
         }
@@ -153,9 +151,7 @@ int send_email(char *sendername, char *sendermail, char *msg,
         while (r != NULL) {
                 if (r->email == NULL)
                         break;
-                if (write_socket(sockfd,"250","RCPT TO: %s <%s>\r\n",
-                        r->name, r->email)) 
-                {
+                if (write_socket(sockfd,"250","RCPT TO: <%s>\r\n", r->email)) {
                         syslog(LOG_DEBUG, "ERROR: 250 expected for RCPT");
                         goto close_socket;
                 }
